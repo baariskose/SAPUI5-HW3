@@ -1,0 +1,110 @@
+<mvc:View controllerName="com.smod.employeelist.controller.View1"
+	xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.f"
+	xmlns:card="sap.f.cards"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m">
+	<Page id="page">
+		<customHeader>
+			<Toolbar>
+				<Title text="{i18n>title}"/>
+				<ToolbarSpacer />
+				<SearchField placeholder="Type a name to search" width="30rem" search=".onSearch" />
+				<SegmentedButton >
+					<items>
+						<SegmentedButtonItem key="grid" icon="sap-icon://grid" press=".ShowGrid" />
+						<SegmentedButtonItem key="table" icon="sap-icon://list" press=".ShowTable" />
+					</items>
+				</SegmentedButton>
+			</Toolbar>
+		</customHeader>
+		<content >
+			<l:VerticalLayout width="100%" class="gridWrapper">
+				<l:Grid id="EmployeeGridId" class="sapUiSmallMarginTopBottom" defaultSpan="XL3 L3 M4 S12" content="{/Employees}" visible="{= ${empListModel>/displayMode} === 'grid' ? true: false}">
+					<l:content>
+						<f:Card   headerPosition="Top" class="customEmployeeCard" width="100%">
+							<f:customData>
+								<core:CustomData key="direct-reports-count" value="{path:'EmployeeID',formatter: '.getDirectReportsCount'}" writeToDom="{path:'EmployeeID',formatter: '.hasDirectReports'}" />
+							</f:customData>
+							<f:header>
+								<card:Header title="{FirstName} {LastName} - {EmployeeID}" subtitle="{Title}" iconSrc="{path:'Photo', formatter: '.convertImagePath'}" />
+							</f:header>
+							<f:content>
+								<VBox class="sapUiSmallMargin" justifyContent="SpaceBetween">
+									<HBox justifyContent="SpaceBetween" alignContent="Center">
+										<Label text="Hire Date:" labelFor="Hire" design="Bold" />
+										<Text id="Hire" text=" { path:'HireDate', 	type: 'sap.ui.model.type.DateTime',
+				                                formatOptions: {
+					                            pattern: 'dd/MM/YYYY'
+				                                }}">
+										</Text>
+									</HBox>
+									<HBox alignItems="Center" alignContent="Center" justifyContent="SpaceBetween">
+										<Label text="Reports to" />
+										<Link text="{path:'ReportsTo',formatter: '.getEmployeeById'}" press="onPressReportsTo" >
+											<customData>
+                                        		<core:CustomData key="ReportsToWho" value="{ReportsTo}" />
+                                    		</customData>
+										</Link>
+									</HBox>
+									<HBox justifyContent="SpaceBetween" alignContent="Center">
+										<Label text="Age" labelFor="age" design="Bold" />
+										<Text id="age" text="{path:'BirthDate', formatter:'.calculateAge'}"/>
+									</HBox>
+								</VBox>
+							</f:content>
+						</f:Card>
+					</l:content>
+				</l:Grid>
+			</l:VerticalLayout>
+			<Table id="EmployeeTableId" items="{/Employees}" headerText="EmployeeList" width="100%" visible="{= ${empListModel>/displayMode} === 'table' ? true: false}">
+				<columns>
+					<Column id="EmployeeId">
+						<Title text="{i18n>EmployeeId}"/>
+					</Column>
+					<Column id="EmployeeNameandSurname">
+						<Title text="{i18n>EmployeeNameandSurname}"/>
+					</Column>
+					<Column id="EmployeeTitle">
+						<Title text="{i18n>EmployeeTitle}"/>
+					</Column>
+					<Column id="EmployeeBirthDate">
+						<Title text="{i18n>EmployeeBirthDate}"/>
+					</Column>
+					<Column id="EmployeeHireDate">
+						<Title text="{i18n>EmployeeHireDate}"/>
+					</Column>
+					<Column id="EmployeeCeo">
+						<Title text="{i18n>EmployeeCeo}"/>
+					</Column>
+					<Column id="EmployeeCeoCheck" hAlign="Center">
+						<Title text="{i18n>EmployeeCeoCheck}"/>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<ObjectStatus class="sapUiSmallMarginBottom" text="{EmployeeID}" state="{= ${EmployeeID} % 2 === 0 ? 'Success' : 'Warning' }" />
+							<ObjectStatus class="sapUiSmallMarginBottom" text="{FirstName} {LastName}" state="{= ${EmployeeID} % 2 === 0 ? 'Success' : 'Warning' }" />
+							<Text text="{Title}"/>
+							<Text text="{path:'BirthDate',	type: 'sap.ui.model.type.DateTime',
+                                    formatOptions: {
+                                        pattern: 'dd/MM/YYYY'
+                                    }}"/>
+
+							<Text text="{path:'HireDate', formatter:'.calculateSeniority'}"/>
+
+							<Text text="{ReportsTo}"/>
+							<CheckBox editable="false" selected="{= ${ReportsTo} === null }">
+							</CheckBox>
+						</cells>
+
+					</ColumnListItem>
+				</items>
+
+
+			</Table>
+		</content >
+	</Page>
+</mvc:View>

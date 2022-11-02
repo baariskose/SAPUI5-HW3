@@ -1,0 +1,20 @@
+<core:FragmentDefinition  xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+	<QuickView id="quickView" objectBindings="{ path :'/CurrentReportsTo', templateShareable : true}" navigate=".onNavigate">
+		<QuickViewPage
+				header="Employee Info "
+				title= "{FirstName} {LastName} - {EmployeeID}"
+                description= "{Title}"
+                icon="{path:'EmployeeID', formatter: '.convertImagePath2'}"
+                >
+			<QuickViewGroup  heading="Employees" elements="{ path : '/Employees', templateShareable : true}">
+				<QuickViewGroupElement
+                	    label="Ad Soyad"
+						value="{FirstName} {LastName}"
+						emailSubject="{Title}"
+						>
+				</QuickViewGroupElement>
+
+			</QuickViewGroup>
+		</QuickViewPage>
+	</QuickView>
+</core:FragmentDefinition>
